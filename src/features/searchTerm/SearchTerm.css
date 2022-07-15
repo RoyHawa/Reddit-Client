@@ -1,0 +1,37 @@
+.searchBar{
+    margin-bottom:10px;
+    background: white;
+    /* box-shadow: 0 1px rgba(255, 255, 255, 0.764); */
+    padding:10px 0;
+}
+.searchBar button{
+    border:1px solid grey;
+    border-left:none;
+    cursor: pointer;
+    padding:5px;
+    padding-top: 3.6px;
+    background: #2196F3;
+    color:white;
+    font-size: 17px;
+
+}
+
+.searchBar button:hover{
+    background: #0b7dda;
+}
+
+.searchBar button:active{
+    background:white ;
+    color:#2196F3
+}
+
+.searchBar input{
+    border:1px solid grey;
+    padding:5px;
+    font-size: 17px;
+}
+
+.searchBar input:focus {
+    outline:none;
+    border:1px solid #0b7dda;
+}

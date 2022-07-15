@@ -1,0 +1,16 @@
+.subreddits{
+    margin:0 10px;
+    padding-right:10px;
+    border:1px solid #2196F3;
+    border-radius: 5px;
+    background: white;
+
+}
+
+li:hover{
+    text-decoration: underline;
+}
+
+.subreddits h2{
+    text-align: center;
+}

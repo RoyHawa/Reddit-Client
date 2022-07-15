@@ -1,0 +1,16 @@
+.comment p,
+.comment h5 {
+  margin: 0;
+}
+
+.comment {
+  background: linear-gradient(to right, white, rgb(227, 223, 223));
+  border-left: 2px solid black;
+  padding-left: 5px;
+}
+.comment p {
+  font-size: 18px;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+
