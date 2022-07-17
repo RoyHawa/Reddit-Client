@@ -24,11 +24,11 @@
 
 .icon {
   display: inline-block;
-  height: 25px;
-  width: 25px;
+  height: 27px;
+  width: 27px;
   overflow: hidden;
   border-radius: 50%;
-  border: 2px solid black;
+  border: 2px solid blue;
   margin-right:10px;
 }
 
