@@ -3,35 +3,39 @@ const baseURL = "https://www.reddit.com";
 
 export const loadPostsForSubreddit = createAsyncThunk(
   "subreddit/loadPostsForSubreddit",
-  async (subreddit = "") => {
-    const response = await fetch(
-      subreddit ? `${baseURL}/r/${subreddit}.json` : `${baseURL}/.json`
-    );
+  async (subreddit) => {
+    const response = await fetch(`${baseURL}/r/${subreddit}.json`);
 
     const jsonResponse = await response.json();
     return jsonResponse.data.children;
   }
 );
 
-export const loadCommentsForPost=createAsyncThunk(
-  'subreddit/loadCommentsForPost',
-  async (permalink)=>{
-    const response=await fetch(`${baseURL}/${permalink}.json`);
-    const jsonResponse= await response.json();
-    // console.log(jsonResponse);
-    // return jsonResponse.data;
+export const loadCommentsForPost = createAsyncThunk(
+  "subreddit/loadCommentsForPost",
+  async (permalink) => {
+    const response = await fetch(`${baseURL}/${permalink}.json`);
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+    return jsonResponse.data;
   }
-)
+);
 
 export const subredditSlice = createSlice({
   name: "subreddit",
   initialState: {
     subreddit: "Home",
     posts: [],
+    commentsByPostId: [],
     isLoading: false,
     error: false,
   },
-  reducers: {},
+  reducers: {
+    changeSubreddit: (state, action) => {
+      state.subreddit = action.payload;
+      state.posts = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadPostsForSubreddit.pending, (state, action) => {
@@ -41,22 +45,20 @@ export const subredditSlice = createSlice({
       .addCase(loadPostsForSubreddit.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = false;
-        action.payload.forEach((post,index) => {
-          if (post.data.post_hint !== "self") {
+        if (state.posts.length === 0) {
+          action.payload.forEach((post, index) => {
             state.posts.push({
-              id:index,
+              id: index,
               author: post.data.author,
               url_overridden_by_dest: post.data.url_overridden_by_dest,
               title: post.data.title,
               ups: post.data.ups,
               num_comments: post.data.num_comments,
-              video: post.data.secure_media,
               post_hint: post.data.post_hint,
-              permalink:post.data.permalink,
-              comments:[]
+              permalink: post.data.permalink,
             });
-          }
-        });
+          });
+        }
       })
       .addCase(loadPostsForSubreddit.rejected, (state, action) => {
         state.isLoading = false;
@@ -67,7 +69,8 @@ export const subredditSlice = createSlice({
 });
 
 export const selectPosts = (state) => state.subreddit.posts;
-// export const selectComments=(state)=>state.subreddit.
+export const selectComments = (state) => state.subreddit.commentsByPostId;
+export const selectSubreddit = (state) => state.subreddit.subreddit;
 
+export const { changeSubreddit } = subredditSlice.actions;
 export default subredditSlice.reducer;
-

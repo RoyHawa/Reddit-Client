@@ -4,11 +4,13 @@ import Upvote from "../upvote/Upvote";
 import Comments from "../comments/Comments";
 
 const Post = ({
+  id,
   author,
   title,
   url_overridden_by_dest,
   ups,
   num_comments,
+  comments,
   video,
   post_hint,
   permalink
@@ -19,8 +21,6 @@ const Post = ({
         return <img alt={title} src={url_overridden_by_dest} />;
       case "link":
         return <a href={url_overridden_by_dest}>{url_overridden_by_dest}</a>;
-      case "hosted:video":
-        return <video controls src={video.reddit_video.fallback_url} />;
       default:
         return;
     }
@@ -33,7 +33,7 @@ const Post = ({
         <h6>Posted by {author}</h6>
         <h3>{title}</h3>
         {media(post_hint)}
-        <Comments num_comments={num_comments} permalink={permalink}/> 
+        <Comments postId={id} num_comments={num_comments} permalink={permalink}/> 
       </div>
     </div>
   );

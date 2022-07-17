@@ -2,24 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import "./Comments.css";
 import { FaComments } from "react-icons/fa";
-import { loadCommentsForPost } from "../../features/subreddit/subredditSlice";
+import { loadCommentsForPost, selectComments } from "../../features/subreddit/subredditSlice";
 
-const Comments = ({ permalink,num_comments }) => {
+const Comments = ({postId,permalink,num_comments }) => {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
-
   const dispatch=useDispatch();
-  let loadComments=false;
 
   useEffect(() => {
     // dispatch(loadCommentsForPost(permalink));
-    // setComments(useSelector());
+
+
     // const findComments = commentsArr.find((comment) => comment.id === id);
     // setComments(findComments.comments);
-  }, [loadComments]);
-
+  }, [dispatch,showComments]);
+  
+  // setComments(useSelector(selectComments[postId]));
   const handleClick=()=>{
-    loadComments=true;
     setShowComments(!showComments);
   }
 
