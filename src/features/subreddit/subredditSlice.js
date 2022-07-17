@@ -16,8 +16,16 @@ export const loadCommentsForPost = createAsyncThunk(
   async (permalink) => {
     const response = await fetch(`${baseURL}/${permalink}.json`);
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse.data;
+  }
+);
+
+export const loadSubredditOptions = createAsyncThunk(
+  "subreddit/loadSubredditOptions",
+  async () => {
+    const response = await fetch(`${baseURL}/subreddits.json`);
+    const jsonResponse = await response.json();
+    return jsonResponse.data.children;
   }
 );
 
@@ -25,26 +33,29 @@ export const subredditSlice = createSlice({
   name: "subreddit",
   initialState: {
     subreddit: "Home",
+    subreddits: [],
     posts: [],
     commentsByPostId: [],
-    isLoading: false,
-    error: false,
+    isLoadingPosts: false,
+    errorLoadingPosts: false,
+    isLoadingSubreddits: false,
+    errorLoadingSubreddits: false,
   },
   reducers: {
     changeSubreddit: (state, action) => {
-      state.subreddit = action.payload;
+      state.subreddit = action.payload.display_name;
       state.posts = [];
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(loadPostsForSubreddit.pending, (state, action) => {
-        state.isLoading = true;
-        state.error = false;
+        state.isLoadingPosts = true;
+        state.errorLoadingPosts = false;
       })
       .addCase(loadPostsForSubreddit.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = false;
+        state.isLoadingPosts = false;
+        state.errorLoadingPosts = false;
         if (state.posts.length === 0) {
           action.payload.forEach((post, index) => {
             state.posts.push({
@@ -60,10 +71,27 @@ export const subredditSlice = createSlice({
           });
         }
       })
-      .addCase(loadPostsForSubreddit.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = true;
-        console.log("error in loadPostsForSubreddit");
+      .addCase(loadPostsForSubreddit.rejected, (state) => {
+        state.isLoadingPosts = false;
+        state.errorLoadingPosts = true;
+      })
+      .addCase(loadSubredditOptions.pending, (state) => {
+        state.isLoadingSubreddits = true;
+        state.errorLoadingSubreddits = false;
+      })
+      .addCase(loadSubredditOptions.fulfilled, (state, action) => {
+        state.isLoadingSubreddits = false;
+        state.errorLoadingSubreddits = false;
+        state.subreddits = action.payload.map((subreddit, index) => {
+          return {
+            display_name: subreddit.data.display_name,
+            icon: subreddit.data.icon_img,
+          };
+        });
+      })
+      .addCase(loadSubredditOptions.rejected, (state) => {
+        state.isLoadingSubreddits = false;
+        state.errorLoadingSubreddits = true;
       });
   },
 });
@@ -71,6 +99,7 @@ export const subredditSlice = createSlice({
 export const selectPosts = (state) => state.subreddit.posts;
 export const selectComments = (state) => state.subreddit.commentsByPostId;
 export const selectSubreddit = (state) => state.subreddit.subreddit;
+export const selectSubreddits = (state) => state.subreddit.subreddits;
 
 export const { changeSubreddit } = subredditSlice.actions;
 export default subredditSlice.reducer;
