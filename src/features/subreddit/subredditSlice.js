@@ -1,47 +1,73 @@
-import { createSlice,createAsyncThunk} from "@reduxjs/toolkit";
-const baseURL='https://www.reddit.com/r/';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+const baseURL = "https://www.reddit.com";
 
+export const loadPostsForSubreddit = createAsyncThunk(
+  "subreddit/loadPostsForSubreddit",
+  async (subreddit = "") => {
+    const response = await fetch(
+      subreddit ? `${baseURL}/r/${subreddit}.json` : `${baseURL}/.json`
+    );
 
-export const loadPostsForSubreddit=createAsyncThunk('subreddit/loadPostsForSubreddit',
-async (subreddit)=>{
-    const response=await fetch(`${baseURL}${subreddit}.json`);
-    //  return JSON.stringify(response);
-    return response;
-})
+    const jsonResponse = await response.json();
+    return jsonResponse.data.children;
+  }
+);
 
-export const subredditSlice=createSlice({
-    name:'subreddit',
-    initialState:{
-        subreddit:'Home',
-        posts:[],
-        isLoading:false,
-        error:false
-    },
-    reducers:{
-  
-    },
-    extraReducers:(builder)=>{
-        builder.addCase(loadPostsForSubreddit.pending,(state,action)=>{
-            state.isLoading=true;
-            state.error=false;
-        })
-        .addCase(loadPostsForSubreddit.fulfilled,(state,action)=>{
-            state.isLoading=false;
-            state.error=false;
-            state.posts=action.payload.data;
-            // console.log(`state.posts=${state.posts}`);
-        })
-        .addCase(loadPostsForSubreddit.rejected,(state,action)=>{
-            state.isLoading=false;
-            state.error=true;
-            console.log('error in loadPostsForSubreddit');
-        })
-    }
-})
+export const loadCommentsForPost=createAsyncThunk(
+  'subreddit/loadCommentsForPost',
+  async (permalink)=>{
+    const response=await fetch(`${baseURL}/${permalink}.json`);
+    const jsonResponse= await response.json();
+    // console.log(jsonResponse);
+    // return jsonResponse.data;
+  }
+)
 
-export const selectPosts=state=>state.subreddit.posts;
+export const subredditSlice = createSlice({
+  name: "subreddit",
+  initialState: {
+    subreddit: "Home",
+    posts: [],
+    isLoading: false,
+    error: false,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadPostsForSubreddit.pending, (state, action) => {
+        state.isLoading = true;
+        state.error = false;
+      })
+      .addCase(loadPostsForSubreddit.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = false;
+        action.payload.forEach((post,index) => {
+          if (post.data.post_hint !== "self") {
+            state.posts.push({
+              id:index,
+              author: post.data.author,
+              url_overridden_by_dest: post.data.url_overridden_by_dest,
+              title: post.data.title,
+              ups: post.data.ups,
+              num_comments: post.data.num_comments,
+              video: post.data.secure_media,
+              post_hint: post.data.post_hint,
+              permalink:post.data.permalink,
+              comments:[]
+            });
+          }
+        });
+      })
+      .addCase(loadPostsForSubreddit.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = true;
+        console.log("error in loadPostsForSubreddit");
+      });
+  },
+});
+
+export const selectPosts = (state) => state.subreddit.posts;
+// export const selectComments=(state)=>state.subreddit.
 
 export default subredditSlice.reducer;
-// export {}
-
 

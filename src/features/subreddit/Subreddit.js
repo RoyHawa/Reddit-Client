@@ -1,41 +1,24 @@
-import React,{useEffect} from 'react';
-import './Subreddit.css';
-import {posts} from '../../data/posts';
-import Post from '../../Components/post/Post';
-import {useDispatch,useSelector} from 'react-redux';
-import { loadPostsForSubreddit,selectPosts } from './subredditSlice';
-
+import React, { useEffect } from "react";
+import "./Subreddit.css";
+import Post from "../../Components/post/Post";
+import { useDispatch, useSelector } from "react-redux";
+import { loadPostsForSubreddit, selectPosts } from "./subredditSlice";
 
 const Subreddit = () => {
-  const dispatch=useDispatch();
-  
+  const dispatch = useDispatch();
+  const posts = useSelector(selectPosts);
+
   useEffect(() => {
-    dispatch(loadPostsForSubreddit('ksi'));
+    dispatch(loadPostsForSubreddit());
   }, [dispatch]);
-  
-  const posts=useSelector(selectPosts);
-  console.log(posts);
+
   return (
-    <div className='subreddit'>
-      {/* <h2>subreddit</h2> */}
-      {
-        posts.map((post)=>{
-          return (
-            <Post key={post.id} {...post}/>
-          )
-        })
-      }
-      
-        {
-        posts.map((post)=>{
-          return (
-            <Post key={post.id} {...post}/>
-          )
-        })
-      }
+    <div className="subreddit">
+      {posts.map((post, index) => {
+        return <Post key={index} {...post} />;
+      })}
     </div>
   );
-}
+};
 
 export default Subreddit;
-blabfsjkflsdj

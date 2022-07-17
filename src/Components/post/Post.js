@@ -1,55 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Post.css";
-import { ImArrowUp, ImArrowDown } from "react-icons/im";
+import Upvote from "../upvote/Upvote";
 import Comments from "../comments/Comments";
 
-const Post = ({ id, author, title, thumbnail, created, num_comments, ups }) => {
-  const [upvote, setUpvote] = useState(false);
-  const [downvote, setDownvote] = useState(false);
-  const [upvoteTotal, setUpvoteTotal] = useState(ups);
-
-  const handleUpvote = () => {
-    if (downvote) {
-      setDownvote(false);
+const Post = ({
+  author,
+  title,
+  url_overridden_by_dest,
+  ups,
+  num_comments,
+  video,
+  post_hint,
+  permalink
+}) => {
+  function media(post_hint) {
+    switch (post_hint) {
+      case "image":
+        return <img alt={title} src={url_overridden_by_dest} />;
+      case "link":
+        return <a href={url_overridden_by_dest}>{url_overridden_by_dest}</a>;
+      case "hosted:video":
+        return <video controls src={video.reddit_video.fallback_url} />;
+      default:
+        return;
     }
-    if (upvote) {
-      setUpvoteTotal(ups);
-    } else {
-      setUpvoteTotal(ups + 1);
-    }
-    setUpvote(!upvote);
-  };
-
-  const handleDownvote = () => {
-    if (upvote) {
-      setUpvote(false);
-    }
-    if (downvote) {
-      setUpvoteTotal(ups);
-    } else {
-      setUpvoteTotal(ups - 1);
-    }
-    setDownvote(!downvote);
-  };
+  }
 
   return (
     <div className="post">
-      <div className="upvotes">
-        <button onClick={handleUpvote} className={upvote ? "active" : ""}>
-          <ImArrowUp />
-        </button>
-        <h6>{upvoteTotal}</h6>
-        <button onClick={handleDownvote} className={downvote ? "active" : ""}>
-          <ImArrowDown />
-        </button>
-      </div>
+      <Upvote ups={ups} />
       <div className="info">
-        <h6>
-          Posted by {author} {created}h ago
-        </h6>
+        <h6>Posted by {author}</h6>
         <h3>{title}</h3>
-        <img alt={title} src={thumbnail} />
-        <Comments id={id} num_comments={num_comments} />
+        {media(post_hint)}
+        <Comments num_comments={num_comments} permalink={permalink}/> 
       </div>
     </div>
   );
