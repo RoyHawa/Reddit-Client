@@ -30,7 +30,7 @@ const Subreddits = () => {
       <ul>
         {subreddits.map((subreddit, index) => {
           return (
-            <li key={index} onClick={() => handleClick(subreddit)}>
+            <li className={currentSubreddit=== subreddit?'active':''} key={index} onClick={() => handleClick(subreddit)}>
               <div className="icon">{subreddit.icon && <img alt={"icon"} src={subreddit.icon} />}</div>
               {subreddit.display_name}
             </li>

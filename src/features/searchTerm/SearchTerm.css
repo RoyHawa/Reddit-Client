@@ -5,30 +5,35 @@
     padding:10px 0;
 }
 .searchBar button{
-    border:1px solid grey;
-    border-left:none;
+    /* border:1px solid grey; */
+    /* border-left:none; */
+    border:none;
     cursor: pointer;
     padding:5px;
     padding-top: 3.6px;
-    background: #2196F3;
-    color:white;
+    /* background: #2196F3; */
+    background: white;
+    color:black;
     font-size: 17px;
 
 }
 
 .searchBar button:hover{
-    background: #0b7dda;
+    /* background: #0b7dda; */
+    cursor: pointer;
 }
 
 .searchBar button:active{
-    background:white ;
-    color:#2196F3
+    /* background:white ;
+    color:#2196F3 */
+    color:blue;
 }
 
 .searchBar input{
     border:1px solid grey;
     padding:5px;
     font-size: 17px;
+    /* border-radius: 5px; */
 }
 
 .searchBar input:focus {

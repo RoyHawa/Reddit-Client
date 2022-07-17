@@ -10,8 +10,13 @@
 }
 
 .subreddits li:hover {
-  text-decoration: underline;
+
   cursor: pointer;
+}
+
+.active{
+  color:blue;
+  font-weight:bolder ;
 }
 
 .subreddits li + li {
@@ -28,7 +33,7 @@
   width: 27px;
   overflow: hidden;
   border-radius: 50%;
-  border: 2px solid blue;
+  border: 2px solid grey;
   margin-right:10px;
 }
 

@@ -33,6 +33,7 @@ const Post = ({
         <h6>Posted by {author}</h6>
         <h3>{title}</h3>
         {media(post_hint)}
+        <hr/>
         <Comments postId={id} num_comments={num_comments} permalink={permalink}/> 
       </div>
     </div>
