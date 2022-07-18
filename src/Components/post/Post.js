@@ -10,8 +10,6 @@ const Post = ({
   url_overridden_by_dest,
   ups,
   num_comments,
-  comments,
-  video,
   post_hint,
   permalink
 }) => {

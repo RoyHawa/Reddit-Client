@@ -16,7 +16,7 @@ export const loadCommentsForPost = createAsyncThunk(
   async (permalink) => {
     const response = await fetch(`${baseURL}/${permalink}.json`);
     const jsonResponse = await response.json();
-    return jsonResponse.data[1];
+    return jsonResponse;
   }
 );
 
@@ -40,17 +40,18 @@ export const subredditSlice = createSlice({
     errorLoadingPosts: false,
     isLoadingSubreddits: false,
     errorLoadingSubreddits: false,
-    isLoadingComments:false,
-    errorLoadingComments:false
+    isLoadingComments: false,
+    errorLoadingComments: false,
   },
   reducers: {
     changeSubreddit: (state, action) => {
       state.subreddit = action.payload.display_name;
       state.posts = [];
+      state.commentsByPostId=[];
     },
   },
   extraReducers: (builder) => {
-    builder//posts
+    builder //posts
       .addCase(loadPostsForSubreddit.pending, (state, action) => {
         state.isLoadingPosts = true;
         state.errorLoadingPosts = false;
@@ -76,7 +77,7 @@ export const subredditSlice = createSlice({
       .addCase(loadPostsForSubreddit.rejected, (state) => {
         state.isLoadingPosts = false;
         state.errorLoadingPosts = true;
-      })//subreddit options
+      }) //subreddit options
       .addCase(loadSubredditOptions.pending, (state) => {
         state.isLoadingSubreddits = true;
         state.errorLoadingSubreddits = false;
@@ -94,18 +95,25 @@ export const subredditSlice = createSlice({
       .addCase(loadSubredditOptions.rejected, (state) => {
         state.isLoadingSubreddits = false;
         state.errorLoadingSubreddits = true;
-      })//comments
-      .addCase(loadCommentsForPost.pending,(state)=>{
-        state.isLoadingComments=true;
-        state.errorLoadingComments=false;
+      }) //comments
+      .addCase(loadCommentsForPost.pending, (state) => {
+        state.isLoadingComments = true;
+        state.errorLoadingComments = false;
       })
-      .addCase(loadCommentsForPost.fulfilled,(state,action)=>{
+      .addCase(loadCommentsForPost.fulfilled, (state, action) => {
+        state.isLoadingComments = false;
+        state.errorLoadingComments = false;
+        state.commentsByPostId.push(action.payload[1].data.children.map((comment)=>{
+          return {author:comment.data.author,
+          body:comment.data.body,
+        created:comment.data.created}
+        }));
+        
+      })
+      .addCase(loadCommentsForPost.rejected,(state)=>{
         state.isLoadingComments=false;
-        state.errorLoadingComments=false;
-        // if(!state.commentsByPostId.includes(comment=>comment))
-      })
-      
-      ;
+        state.errorLoadingComments=true;
+      });
   },
 });
 

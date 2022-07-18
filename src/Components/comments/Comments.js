@@ -6,18 +6,17 @@ import { loadCommentsForPost, selectComments } from "../../features/subreddit/su
 
 const Comments = ({postId,permalink,num_comments }) => {
   const [showComments, setShowComments] = useState(false);
-  const [comments, setComments] = useState([]);
+  // const [comments, setComments] = useState([]);
   const dispatch=useDispatch();
 
   useEffect(() => {
-    // dispatch(loadCommentsForPost(permalink));
-
-
-    // const findComments = commentsArr.find((comment) => comment.id === id);
+    dispatch(loadCommentsForPost(permalink,postId));
     // setComments(findComments.comments);
-  }, [dispatch,showComments]);
+ 
+  }, [dispatch,permalink,postId]);
   
   // setComments(useSelector(selectComments[postId]));
+  const comments=useSelector(selectComments);
   const handleClick=()=>{
     setShowComments(!showComments);
   }
@@ -27,17 +26,16 @@ const Comments = ({postId,permalink,num_comments }) => {
       <button onClick={handleClick}>
         <FaComments />
       </button>
-      {/* {comments.length} */}
-      {2}
-      {/* {showComments &&
-        comments.map((comment,index) => {
+      {/* {comments[postId].length} */}
+      {showComments  &&
+        comments[postId].map((comment,index) => {
           return (
             <div key={index} className="comment">
-              <h5>author name</h5>
-              <p>{comment}</p>
+              <h5>{comment.author}</h5>
+              <p>{comment.body}</p>
             </div>
           );
-        })} */}
+        })}
     </div>
   );
 };
