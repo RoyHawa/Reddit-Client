@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './SearchTerm.css';
+import './SearchBar.css';
 import {FiSearch} from 'react-icons/fi';
 
 const SearchBar = () => {

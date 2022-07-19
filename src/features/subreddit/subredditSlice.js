@@ -45,10 +45,10 @@ export const subredditSlice = createSlice({
         fetched_comments: false,
       });
     },
-    resetPostsandComments:(state)=>{
-      state.posts=[];
-      state.commentsByPostId=[];
-    }
+    resetPostsandComments: (state) => {
+      state.posts = [];
+      state.commentsByPostId = [];
+    },
   },
   extraReducers: (builder) => {
     builder //posts
@@ -77,7 +77,7 @@ export const subredditSlice = createSlice({
       .addCase(loadPostsForSubreddit.rejected, (state) => {
         state.isLoadingPosts = false;
         state.errorLoadingPosts = true;
-      })//comments
+      }) //comments
       .addCase(loadCommentsForPost.pending, (state) => {
         state.isLoadingComments = true;
         state.errorLoadingComments = false;
@@ -89,12 +89,14 @@ export const subredditSlice = createSlice({
         const commentObj = state.commentsByPostId.find(
           (comment) => comment.fetched_comments === false
         );
-        commentObj.comments = action.payload[1].data.children.map(comment=>{
-          return {author:comment.data.author,
-            body:comment.data.body,
-          created:comment.data.created}
+        commentObj.comments = action.payload[1].data.children.map((comment) => {
+          return {
+            author: comment.data.author,
+            body: comment.data.body,
+            created: comment.data.created,
+          };
         });
-        commentObj.fetched_comments=true;
+        commentObj.fetched_comments = true;
       })
       .addCase(loadCommentsForPost.rejected, (state) => {
         state.isLoadingComments = false;
@@ -106,5 +108,6 @@ export const subredditSlice = createSlice({
 export const selectPosts = (state) => state.subreddit.posts;
 export const selectComments = (state) => state.subreddit.commentsByPostId;
 
-export const { createCommentObject,resetPostsandComments } = subredditSlice.actions;
+export const { createCommentObject, resetPostsandComments } =
+  subredditSlice.actions;
 export default subredditSlice.reducer;

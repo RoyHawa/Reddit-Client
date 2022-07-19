@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
-import SearchTerm from "../features/searchTerm/SearchTerm";
+import SearchBar from "../features/searchBar/SearchBar";
 import Subreddit from "../features/subreddit/Subreddit";
 import Subreddits from "../features/subreddits/Subreddits";
 
 function App() {
   return (
     <div className="app">
-      <SearchTerm />
+      <SearchBar />
 
       <div className="content">
         <Subreddits />
