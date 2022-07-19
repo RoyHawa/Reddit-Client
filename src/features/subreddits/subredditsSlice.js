@@ -21,7 +21,6 @@ const subredditsSlice = createSlice({
   reducers: {
     changeSubreddit: (state, action) => {
       state.currentSubreddit = action.payload.display_name;
-
     },
   },
   extraReducers: (builder) => {
