@@ -19,12 +19,12 @@ const SearchBar = () => {
   const dispatch = useDispatch();
   const searchTerm = useSelector(selectSearchTerm);
   const subreddit = useSelector(selectSubreddit);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (searchTerm) {
+
+  const search=()=>{
+    if(searchTerm){
       dispatch(searchForPost(searchTerm));
     }
-  };
+  }
 
   const handleChange = (e) => {
     dispatch(setSearchTerm(e.target.value));
@@ -38,7 +38,6 @@ const SearchBar = () => {
 
   return (
     <div className="searchBar">
-      <form onSubmit={handleSubmit}>
         {searchTerm.length > 0 && (
           <button onClick={clearSearchandLoadPosts}>
             <GrFormClose />
@@ -50,10 +49,9 @@ const SearchBar = () => {
           value={searchTerm}
           onChange={(e) => handleChange(e)}
         ></input>
-        <button type="submit">
+        <button onClick={search}>
           <FiSearch />
         </button>
-      </form>
     </div>
   );
 };
