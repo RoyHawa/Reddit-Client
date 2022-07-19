@@ -49,6 +49,9 @@ export const subredditSlice = createSlice({
       state.posts = [];
       state.commentsByPostId = [];
     },
+    searchForPost:(state,action)=>{
+      state.posts=state.posts.filter(post=>post.title.toLowerCase().includes(action.payload.toLowerCase()))
+    }
   },
   extraReducers: (builder) => {
     builder //posts
@@ -108,6 +111,6 @@ export const subredditSlice = createSlice({
 export const selectPosts = (state) => state.subreddit.posts;
 export const selectComments = (state) => state.subreddit.commentsByPostId;
 
-export const { createCommentObject, resetPostsandComments } =
+export const { createCommentObject, resetPostsandComments, searchForPost} =
   subredditSlice.actions;
 export default subredditSlice.reducer;

@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import './SearchBar.css';
 import {FiSearch} from 'react-icons/fi';
+import { useDispatch,useSelector } from "react-redux";
+import { selectSearchTerm,setSearchTerm,clearSearchTerm } from "./searchBarSlice";
+import { searchForPost } from "../subreddit/subredditSlice";
+import {GrFormClose} from 'react-icons/gr';
 
 const SearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-
+  const dispatch=useDispatch();
+  const searchTerm=useSelector(selectSearchTerm);
   const handleSubmit = (e) => {
     e.preventDefault();
     if(searchTerm){
-      console.log(searchTerm);
-      setSearchTerm("");
+      dispatch(searchForPost(searchTerm));
     }
   };
+
+  const handleChange=(e)=>{
+    dispatch(setSearchTerm(e.target.value));
+  }
 
   return (
       <div className="searchBar">
@@ -20,7 +27,7 @@ const SearchBar = () => {
             type={"text"}
             placeholder="search for post"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => handleChange(e)}
           />
           <button type="submit"><FiSearch/></button>
         </form>
