@@ -5,13 +5,17 @@ import {
   changeSubreddit,
   selectSubreddits,
   loadSubredditOptions,
+  isLoadingSubreddits,
+  errorLoadingSubreddits,
 } from "./subredditsSlice";
-import {resetPostsandComments} from '../subreddit/subredditSlice';
+import { resetPostsandComments } from "../subreddit/subredditSlice";
 
 const Subreddits = () => {
   const subreddits = useSelector(selectSubreddits);
-  const [currentSubreddit, setCurrentSubreddit] = useState('Home');
+  const [currentSubreddit, setCurrentSubreddit] = useState("Home");
   const dispatch = useDispatch();
+  const isLoading = useSelector(isLoadingSubreddits);
+  const errorLoading = useSelector(errorLoadingSubreddits);
 
   useEffect(() => {
     dispatch(loadSubredditOptions());
@@ -19,7 +23,7 @@ const Subreddits = () => {
 
   const handleClick = (subreddit) => {
     if (subreddit.display_name !== currentSubreddit) {
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
       dispatch(resetPostsandComments());
       dispatch(changeSubreddit(subreddit));
       setCurrentSubreddit(subreddit.display_name);
@@ -32,8 +36,16 @@ const Subreddits = () => {
       <ul>
         {subreddits.map((subreddit, index) => {
           return (
-            <li className={currentSubreddit=== subreddit.display_name?'active':''} key={index} onClick={() => handleClick(subreddit)}>
-              <div className="icon">{subreddit.icon && <img alt={"icon"} src={subreddit.icon} />}</div>
+            <li
+              className={
+                currentSubreddit === subreddit.display_name ? "active" : ""
+              }
+              key={index}
+              onClick={() => handleClick(subreddit)}
+            >
+              <div className="icon">
+                {subreddit.icon && <img alt={"icon"} src={subreddit.icon} />}
+              </div>
               {subreddit.display_name}
             </li>
           );

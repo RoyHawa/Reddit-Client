@@ -39,11 +39,17 @@ export const subredditSlice = createSlice({
   },
   reducers: {
     createCommentObject: (state, action) => {
-      state.commentsByPostId.push({
-        postId: action.payload,
-        comments: [],
-        fetched_comments: false,
-      });
+      if (
+        !state.commentsByPostId.find(
+          (commentObj) => commentObj.postId === action.payload
+        )
+      ) {
+        state.commentsByPostId.push({
+          postId: action.payload,
+          comments: [],
+          fetched_comments: false,
+        });
+      }
     },
     resetPostsandComments: (state) => {
       state.posts = [];
@@ -56,7 +62,7 @@ export const subredditSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder //posts
+    builder
       .addCase(loadPostsForSubreddit.pending, (state, action) => {
         state.isLoadingPosts = true;
         state.errorLoadingPosts = false;
@@ -82,7 +88,7 @@ export const subredditSlice = createSlice({
       .addCase(loadPostsForSubreddit.rejected, (state) => {
         state.isLoadingPosts = false;
         state.errorLoadingPosts = true;
-      }) //comments
+      })
       .addCase(loadCommentsForPost.pending, (state) => {
         state.isLoadingComments = true;
         state.errorLoadingComments = false;
@@ -98,7 +104,6 @@ export const subredditSlice = createSlice({
           return {
             author: comment.data.author,
             body: comment.data.body,
-            created: comment.data.created,
           };
         });
         commentObj.fetched_comments = true;
@@ -111,7 +116,13 @@ export const subredditSlice = createSlice({
 });
 
 export const selectPosts = (state) => state.subreddit.posts;
+export const isLoadingPosts = (state) => state.subreddit.isLoadingPosts;
+export const errorLoadingPosts = (state) => state.subreddit.errorLoadingPosts;
+
 export const selectComments = (state) => state.subreddit.commentsByPostId;
+export const isLoadingComments = (state) => state.subreddit.isLoadingComments;
+export const errorLoadingComments = (state) =>
+  state.subreddit.errorLoadingComments;
 
 export const { createCommentObject, resetPostsandComments, searchForPost } =
   subredditSlice.actions;

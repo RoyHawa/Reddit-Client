@@ -50,7 +50,7 @@ const SearchBar = () => {
       )}
       <input
         type={"text"}
-        placeholder="search for post"
+        placeholder="Post Title"
         value={searchTerm}
         onChange={(e) => handleChange(e)}
       ></input>
