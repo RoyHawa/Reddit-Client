@@ -1,21 +1,23 @@
 *{
     box-sizing: border-box;
+
 }
 
 .app{
-    background: #cfcdcd;
+    background: #f0eeee;
 }
 
 .searchBar{
-    display: flex;
-    justify-content: space-around;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 5px rgba(236, 228, 228, 0.767);
 }
 
 .content{
-    /* border:2px solid green; */
     display: flex;
     margin-left:1%;
     margin-right:5%;
+
 }
 
 .content .subreddit{
