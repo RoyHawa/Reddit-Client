@@ -13,7 +13,7 @@ const Comments = ({postId,permalink,num_comments }) => {
     dispatch(loadCommentsForPost(permalink,postId));
     // setComments(findComments.comments);
  
-  }, [dispatch,permalink,postId]);
+  }, [dispatch,showComments,permalink,postId]);
   
   // setComments(useSelector(selectComments[postId]));
   const comments=useSelector(selectComments);
@@ -21,13 +21,14 @@ const Comments = ({postId,permalink,num_comments }) => {
     setShowComments(!showComments);
   }
 
-  return (
-    <div>
+
+    return (
+      <div>
       <button onClick={handleClick}>
         <FaComments />
       </button>
-      {/* {comments[postId].length} */}
-      {showComments  &&
+      {comments[postId].length}
+      {(showComments) &&
         comments[postId].map((comment,index) => {
           return (
             <div key={index} className="comment">
@@ -38,6 +39,7 @@ const Comments = ({postId,permalink,num_comments }) => {
         })}
     </div>
   );
+
 };
 
 export default Comments;
