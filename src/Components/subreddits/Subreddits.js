@@ -9,7 +9,7 @@ import {
 
 const Subreddits = () => {
   const subreddits = useSelector(selectSubreddits);
-  const [currentSubreddit, setCurrentSubreddit] = useState("Home");
+  const [currentSubreddit, setCurrentSubreddit] = useState('Home');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,10 +17,10 @@ const Subreddits = () => {
   }, [dispatch]);
 
   const handleClick = (subreddit) => {
-    if (subreddit !== currentSubreddit) {
+    if (subreddit.display_name !== currentSubreddit) {
       window.scrollTo(0,0);
       dispatch(changeSubreddit(subreddit));
-      setCurrentSubreddit(subreddit);
+      setCurrentSubreddit(subreddit.display_name);
     }
   };
 
@@ -30,7 +30,7 @@ const Subreddits = () => {
       <ul>
         {subreddits.map((subreddit, index) => {
           return (
-            <li className={currentSubreddit=== subreddit?'active':''} key={index} onClick={() => handleClick(subreddit)}>
+            <li className={currentSubreddit=== subreddit.display_name?'active':''} key={index} onClick={() => handleClick(subreddit)}>
               <div className="icon">{subreddit.icon && <img alt={"icon"} src={subreddit.icon} />}</div>
               {subreddit.display_name}
             </li>
