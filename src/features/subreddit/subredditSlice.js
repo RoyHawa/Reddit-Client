@@ -11,6 +11,15 @@ export const loadPostsForSubreddit = createAsyncThunk(
   }
 );
 
+export const loadSubredditOptions = createAsyncThunk(
+  "subreddit/loadSubredditOptions",
+  async () => {
+    const response = await fetch(`${baseURL}/subreddits.json`);
+    const jsonResponse = await response.json();
+    return jsonResponse.data.children;
+  }
+);
+
 export const loadCommentsForPost = createAsyncThunk(
   "subreddit/loadCommentsForPost",
   async (permalink) => {
@@ -20,14 +29,12 @@ export const loadCommentsForPost = createAsyncThunk(
   }
 );
 
-export const loadSubredditOptions = createAsyncThunk(
-  "subreddit/loadSubredditOptions",
-  async () => {
-    const response = await fetch(`${baseURL}/subreddits.json`);
-    const jsonResponse = await response.json();
-    return jsonResponse.data.children;
-  }
-);
+export const loadCommentsForPostId = (permalink, postId) => {
+  return (dispatch) => {
+    dispatch(subredditSlice.actions.createCommentObject(postId));
+    dispatch(loadCommentsForPost(permalink));
+  };
+};
 
 export const subredditSlice = createSlice({
   name: "subreddit",
@@ -47,7 +54,14 @@ export const subredditSlice = createSlice({
     changeSubreddit: (state, action) => {
       state.subreddit = action.payload.display_name;
       state.posts = [];
-      state.commentsByPostId=[];
+      state.commentsByPostId = [];
+    },
+    createCommentObject: (state, action) => {
+      state.commentsByPostId.push({
+        postId: action.payload,
+        comments: [],
+        fetched_comments: false,
+      });
     },
   },
   extraReducers: (builder) => {
@@ -103,16 +117,20 @@ export const subredditSlice = createSlice({
       .addCase(loadCommentsForPost.fulfilled, (state, action) => {
         state.isLoadingComments = false;
         state.errorLoadingComments = false;
-        state.commentsByPostId.push(action.payload[1].data.children.map((comment)=>{
+
+        const commentObj = state.commentsByPostId.find(
+          (comment) => comment.fetched_comments === false
+        );
+        commentObj.comments = action.payload[1].data.children.map(comment=>{
           return {author:comment.data.author,
-          body:comment.data.body,
-        created:comment.data.created}
-        }));
-        
+            body:comment.data.body,
+          created:comment.data.created}
+        });
+        commentObj.fetched_comments=true;
       })
-      .addCase(loadCommentsForPost.rejected,(state)=>{
-        state.isLoadingComments=false;
-        state.errorLoadingComments=true;
+      .addCase(loadCommentsForPost.rejected, (state) => {
+        state.isLoadingComments = false;
+        state.errorLoadingComments = true;
       });
   },
 });
@@ -122,5 +140,5 @@ export const selectComments = (state) => state.subreddit.commentsByPostId;
 export const selectSubreddit = (state) => state.subreddit.subreddit;
 export const selectSubreddits = (state) => state.subreddit.subreddits;
 
-export const { changeSubreddit } = subredditSlice.actions;
+export const { createCommentObject,changeSubreddit } = subredditSlice.actions;
 export default subredditSlice.reducer;
