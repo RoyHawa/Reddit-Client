@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadPostsForSubreddit,
   selectPosts,
-  selectSubreddit,
 } from "./subredditSlice";
+import {
+  selectSubreddit
+} from '../subreddits/subredditsSlice';
 
 const Subreddit = () => {
   const posts=useSelector(selectPosts);

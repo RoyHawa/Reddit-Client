@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import SearchTerm from "../features/searchTerm/SearchTerm";
 import Subreddit from "../features/subreddit/Subreddit";
-import Subreddits from "../Components/subreddits/Subreddits";
+import Subreddits from "../features/subreddits/Subreddits";
 
 function App() {
   return (

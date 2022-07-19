@@ -5,7 +5,8 @@ import {
   changeSubreddit,
   selectSubreddits,
   loadSubredditOptions,
-} from "../../features/subreddit/subredditSlice";
+} from "./subredditsSlice";
+import {resetPostsandComments} from '../subreddit/subredditSlice';
 
 const Subreddits = () => {
   const subreddits = useSelector(selectSubreddits);
@@ -19,6 +20,7 @@ const Subreddits = () => {
   const handleClick = (subreddit) => {
     if (subreddit.display_name !== currentSubreddit) {
       window.scrollTo(0,0);
+      dispatch(resetPostsandComments());
       dispatch(changeSubreddit(subreddit));
       setCurrentSubreddit(subreddit.display_name);
     }

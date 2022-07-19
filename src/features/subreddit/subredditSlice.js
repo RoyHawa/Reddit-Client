@@ -11,15 +11,6 @@ export const loadPostsForSubreddit = createAsyncThunk(
   }
 );
 
-export const loadSubredditOptions = createAsyncThunk(
-  "subreddit/loadSubredditOptions",
-  async () => {
-    const response = await fetch(`${baseURL}/subreddits.json`);
-    const jsonResponse = await response.json();
-    return jsonResponse.data.children;
-  }
-);
-
 export const loadCommentsForPost = createAsyncThunk(
   "subreddit/loadCommentsForPost",
   async (permalink) => {
@@ -39,23 +30,14 @@ export const loadCommentsForPostId = (permalink, postId) => {
 export const subredditSlice = createSlice({
   name: "subreddit",
   initialState: {
-    subreddit: "Home",
-    subreddits: [],
     posts: [],
     commentsByPostId: [],
     isLoadingPosts: false,
     errorLoadingPosts: false,
-    isLoadingSubreddits: false,
-    errorLoadingSubreddits: false,
     isLoadingComments: false,
     errorLoadingComments: false,
   },
   reducers: {
-    changeSubreddit: (state, action) => {
-      state.subreddit = action.payload.display_name;
-      state.posts = [];
-      state.commentsByPostId = [];
-    },
     createCommentObject: (state, action) => {
       state.commentsByPostId.push({
         postId: action.payload,
@@ -63,6 +45,10 @@ export const subredditSlice = createSlice({
         fetched_comments: false,
       });
     },
+    resetPostsandComments:(state)=>{
+      state.posts=[];
+      state.commentsByPostId=[];
+    }
   },
   extraReducers: (builder) => {
     builder //posts
@@ -91,25 +77,7 @@ export const subredditSlice = createSlice({
       .addCase(loadPostsForSubreddit.rejected, (state) => {
         state.isLoadingPosts = false;
         state.errorLoadingPosts = true;
-      }) //subreddit options
-      .addCase(loadSubredditOptions.pending, (state) => {
-        state.isLoadingSubreddits = true;
-        state.errorLoadingSubreddits = false;
-      })
-      .addCase(loadSubredditOptions.fulfilled, (state, action) => {
-        state.isLoadingSubreddits = false;
-        state.errorLoadingSubreddits = false;
-        state.subreddits = action.payload.map((subreddit, index) => {
-          return {
-            display_name: subreddit.data.display_name,
-            icon: subreddit.data.icon_img,
-          };
-        });
-      })
-      .addCase(loadSubredditOptions.rejected, (state) => {
-        state.isLoadingSubreddits = false;
-        state.errorLoadingSubreddits = true;
-      }) //comments
+      })//comments
       .addCase(loadCommentsForPost.pending, (state) => {
         state.isLoadingComments = true;
         state.errorLoadingComments = false;
@@ -137,8 +105,6 @@ export const subredditSlice = createSlice({
 
 export const selectPosts = (state) => state.subreddit.posts;
 export const selectComments = (state) => state.subreddit.commentsByPostId;
-export const selectSubreddit = (state) => state.subreddit.subreddit;
-export const selectSubreddits = (state) => state.subreddit.subreddits;
 
-export const { createCommentObject,changeSubreddit } = subredditSlice.actions;
+export const { createCommentObject,resetPostsandComments } = subredditSlice.actions;
 export default subredditSlice.reducer;
