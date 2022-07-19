@@ -6,15 +6,10 @@ import { loadCommentsForPostId, selectComments } from "../../features/subreddit/
 
 const Comments = ({postId,permalink,num_comments }) => {
   const [showComments, setShowComments] = useState(false);
-  // const [comments, setComments] = useState([]);
   const dispatch=useDispatch();
   const comments=useSelector(selectComments);
   const loadComments=loadCommentsForPostId(permalink,postId);
-  
-  // useEffect(() => {
-  // }, [dispatch,showComments,permalink,postId]);
-  
-  // setComments(useSelector(selectComments[postId]));
+
   const handleClick=()=>{
     let fetchedComments=comments.find(commentObj=>commentObj.postId===postId);
     if(!fetchedComments){
