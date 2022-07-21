@@ -37,11 +37,14 @@
 .upvotes button,.info button{
     background-color: white;
     border:none;
+    
 }
 
 .upvotes button:hover{
     cursor:pointer;
 }
+
+
 
 .active{
     color:blue;
@@ -64,6 +67,11 @@
 @media screen and  (max-width:500px){
     .post img{
         width:200px;
+    }
+
+    .upvotes{
+        margin-right: 15px;
+        width: 10%;
     }
 
 }
